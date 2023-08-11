@@ -317,14 +317,14 @@ impl<'config, 'precompiles, S: StackState<'config>, P: PrecompileSet>
 	}
 
 	/// Execute the runtime until it returns.
-	pub fn execute(&mut self, runtime: &mut Runtime) -> ExitReason {
+	pub fn execute(&mut self, runtime: &mut Runtime) -> (ExitReason, Vec<u8>) {
 		let mut call_stack = Vec::with_capacity(DEFAULT_CALL_STACK_CAPACITY);
 		call_stack.push(TaggedRuntime {
 			kind: RuntimeKind::Execute,
 			inner: MaybeBorrowed::Borrowed(runtime),
 		});
-		let (reason, _, _) = self.execute_with_call_stack(&mut call_stack);
-		reason
+		let (reason, _, output) = self.execute_with_call_stack(&mut call_stack);
+		(reason, output)
 	}
 
 	/// Execute using Runtimes on the call_stack until it returns.
